@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #efefef;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  width: 300px;
+  padding: 16px 24px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 15px 5px rgba(0, 4, 8, 0.05);
+
+  & :global(.ui.header .sub.header) {
+    padding-top: 8px;
+    line-height: 16px;
+  }
+
+  & :global(.ui.input) {
+    padding: 8px 0;
+  }
+
+  & :global(.ui.button) {
+    margin: 8px auto 0;
+    display: block;
+  }
+}
+
+.notify {
+  width: 300px;
+  padding-top: 12px;
+  text-align: center;
+}

@@ -1,8 +1,9 @@
 import Currency from "../constants/currency";
 import { randomFrom, randomIntFromInterval, randomDateTime } from "../utils/random";
 import CardStatus from "../constants/card-status";
-import type fastify from "fastify";
 import createCachedGenerator from "../utils/create-cached-generator";
+import type { GenerateRouteFn } from "types";
+import { NO_PARAMETER_RESPONSE } from "../constants/responses";
 
 type Card = {
   cardAccount: number,
@@ -24,18 +25,21 @@ const generateCard = (forAccount: number, i: number): Card => ({
   balance: parseFloat(`${randomIntFromInterval(0, 100000)}.${randomIntFromInterval(0, 99)}`),
 });
 
-const generateCardWithCache = createCachedGenerator(generateCard);
+export const cardsGenerator = createCachedGenerator(generateCard);
 
 type CardsQuery = Partial<{
   accountID: number,
   count: number,
 }>;
 
-const registerCardsRoute = (s: ReturnType<typeof fastify>) => s.get<{
+const registerCardsRoute: GenerateRouteFn = s => s.get<{
   Querystring: CardsQuery
-}>('/cards', (req) => {
-  if (!req.query.accountID) return [];
-  return generateCardWithCache(req.query.count || 20, req.query.accountID);
+}>('/cards', (req, reply) => {
+  if (!req.query.accountID) {
+    return NO_PARAMETER_RESPONSE(reply, ['accountID']);
+  }
+  if (!cardsGenerator.cache[req.query.accountID]) return [];
+  return cardsGenerator.cache[req.query.accountID];
 });
 
 export default registerCardsRoute;
