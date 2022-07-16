@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start:dev": "nodemon",
-    "start": "node build/index.js"
+    "start": "nodemon"
   },
   "author": "Gafiatullin Albert",
   "license": "ISC",

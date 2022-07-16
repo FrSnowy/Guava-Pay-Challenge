@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  back:
+    container_name: guava-test-mock-back
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./back:/app
+    build:
+      context: "./back"
+      dockerfile: Dockerfile
+    command: npm run start
+    networks:
+      - internal
+networks:
+  internal:
