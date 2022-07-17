@@ -1,9 +1,15 @@
 import type { FastifyReply } from "fastify";
 
-export const ALL_OK = (reply: FastifyReply) => reply.code(200).send({
+export const EMPTY_OK = (reply: FastifyReply) => reply.code(200).send({
   statusCode: 200,
   error: false,
 });
+
+export const DATA_OK = (reply: FastifyReply, data?: Object) => reply.code(200).send({
+  statusCode: 200,
+  error: false,
+  data,
+})
 
 export const NO_PARAMETER_RESPONSE = (reply: FastifyReply, params: string[]) => reply.code(500).send({
   statusCode: 500,

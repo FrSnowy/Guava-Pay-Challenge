@@ -1,13 +1,23 @@
 import * as React from 'react';
-import Headbar from './components/Headbar';
+import useModel, { AuthModelT } from '@/root-store';
+import AuthPage from '@/features/Auth';
 import TransactionsPage from '@/features/Transactions';
-import AuthPage from './features/Auth';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
-const App = () => (
-  <React.Fragment>
-    <Headbar />
-    <AuthPage />
-  </React.Fragment>
-);
+const App = () => {
+  const navigate = useNavigate();
+  const { authorized } = useModel<AuthModelT>("AuthModel");
+
+  React.useEffect(() => {
+    !authorized && navigate('/auth');
+  }, [authorized]);
+
+  return (
+    <Routes>
+      <Route path='/auth' element={<AuthPage />} />
+      <Route path='/transactions' element={<TransactionsPage />} />
+    </Routes>
+  );
+};
 
 export default App

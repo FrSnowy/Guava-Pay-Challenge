@@ -1,7 +1,7 @@
 export const randomIntFromInterval = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);
 export const randomFrom = <T = any>(arr: [T, ...T[]]) => arr[randomIntFromInterval(0, arr.length - 1)] || arr[0];
 export const randomDateTime = () => {
-  const year = randomIntFromInterval(1900, 2022);
+  const year = randomIntFromInterval(2020, 2022);
 
   const numAsStr = (v: number) => v < 10 ? `0${v}`: `${v}`;
 

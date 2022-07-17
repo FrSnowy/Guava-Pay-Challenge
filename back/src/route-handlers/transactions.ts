@@ -2,7 +2,7 @@ import createCachedGenerator from "../utils/create-cached-generator";
 import Currency from "../constants/currency";
 import { randomFrom, randomIntFromInterval, randomDateTime } from "../utils/random";
 import type { GenerateRouteFn } from "types";
-import { NO_PARAMETER_RESPONSE } from "../constants/responses";
+import { DATA_OK, NO_PARAMETER_RESPONSE } from "../constants/responses";
 
 type Transaction = {
   transactionID: number,
@@ -35,18 +35,28 @@ export const transactionGenerator = createCachedGenerator<Transaction, Generator
 
 type TransactionsQuery = Partial<{
   accountID: number,
-  count: number,
+  limit: number,
+  offset: number,
 }>;
 
 const registerTransactionsRoute: GenerateRouteFn = s => s.get<{
   Querystring: TransactionsQuery
 }>('/transactions', (req, reply) => {
-  if (!req.query.accountID) {
+  let { accountID, offset = 0, limit } = req.query;
+  offset = parseInt(`${offset}`, 10);
+  limit = parseInt(`${limit}`, 10);
+
+  if (!accountID) {
     return NO_PARAMETER_RESPONSE(reply, ['accountID']);
   }
 
-  if (!transactionGenerator.cache[req.query.accountID]) return [];
-  return transactionGenerator.cache[req.query.accountID];
+  if (!transactionGenerator.cache[accountID]) return DATA_OK(reply, { transactions: [], totalCount: 0 });
+
+  const transactions = transactionGenerator.cache[accountID]!
+    .slice(offset, limit ? offset + limit : undefined)
+    .sort((a, b) => Date.parse(b.transactionDate) - Date.parse(a.transactionDate));
+
+  return DATA_OK(reply, { transactions, totalCount: transactionGenerator.cache[accountID]!.length });
 });
 
 export default registerTransactionsRoute;

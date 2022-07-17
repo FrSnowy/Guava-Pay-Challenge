@@ -3,7 +3,7 @@ import { randomFrom, randomIntFromInterval, randomDateTime } from "../utils/rand
 import CardStatus from "../constants/card-status";
 import createCachedGenerator from "../utils/create-cached-generator";
 import type { GenerateRouteFn } from "types";
-import { NO_PARAMETER_RESPONSE } from "../constants/responses";
+import { DATA_OK, NO_PARAMETER_RESPONSE } from "../constants/responses";
 
 type Card = {
   cardAccount: number,
@@ -38,8 +38,8 @@ const registerCardsRoute: GenerateRouteFn = s => s.get<{
   if (!req.query.accountID) {
     return NO_PARAMETER_RESPONSE(reply, ['accountID']);
   }
-  if (!cardsGenerator.cache[req.query.accountID]) return [];
-  return cardsGenerator.cache[req.query.accountID];
+  if (!cardsGenerator.cache[req.query.accountID]) return DATA_OK(reply, []);
+  return DATA_OK(reply, cardsGenerator.cache[req.query.accountID]);
 });
 
 export default registerCardsRoute;
