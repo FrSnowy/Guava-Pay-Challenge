@@ -5,7 +5,7 @@ import createCachedGenerator from "../utils/create-cached-generator";
 import type { GenerateRouteFn } from "types";
 import { DATA_OK, NO_PARAMETER_RESPONSE } from "../constants/responses";
 
-type Card = {
+export type Card = {
   cardAccount: number,
   cardID: number,
   maskedCardNumber: string,
@@ -22,7 +22,7 @@ type CardGeneratorData = {
 const generateCard = (_: number, i: number, data: CardGeneratorData): Card => ({
   cardAccount: randomFrom(data?.allowedAccounts as [number, ...number[]]),
   cardID: i,
-  maskedCardNumber: `${randomIntFromInterval(1111, 9999)} **** **** **${randomIntFromInterval(11, 99)}`,
+  maskedCardNumber: `${randomIntFromInterval(1111, 9999)} **** **** ${randomIntFromInterval(1111, 9999)}`,
   expireDate: randomDateTime(),
   currency: randomFrom([Currency.AZN, Currency.EUR, Currency.USD]),
   status: randomFrom([CardStatus.active, CardStatus.blocked]),
@@ -30,20 +30,34 @@ const generateCard = (_: number, i: number, data: CardGeneratorData): Card => ({
 });
 
 export const cardsGenerator = createCachedGenerator<Card, CardGeneratorData>(generateCard);
+export const getCards = (
+  institutionID: number,
+  filters: {
+    cardID?: number | string | undefined,
+  },
+) => {
+  const cards: Card[] | undefined = cardsGenerator.cache[institutionID];
+  if (!cards) return [];
+
+  const { cardID } = filters;
+  return cardID ? cards.filter(c => c.cardID === parseInt(`${cardID}`, 10)) : cards;
+}
 
 type CardsQuery = Partial<{
   institutionID: number,
-  count: number,
+  cardID: number,
 }>;
 
 const registerCardsRoute: GenerateRouteFn = s => s.get<{
   Querystring: CardsQuery
 }>('/cards', (req, reply) => {
-  if (!req.query.institutionID) {
+  const { institutionID, cardID } = req.query;
+  if (!institutionID) {
     return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
   }
-  if (!cardsGenerator.cache[req.query.institutionID]) return DATA_OK(reply, []);
-  return DATA_OK(reply, cardsGenerator.cache[req.query.institutionID]);
+
+  const cards = getCards(institutionID, { cardID });
+  return DATA_OK(reply, cards);
 });
 
 export default registerCardsRoute;

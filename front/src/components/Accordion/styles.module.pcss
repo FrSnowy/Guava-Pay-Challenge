@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+
+  & :global(.ui.radio) {
+    width: 100%;
+    padding: 4px 0 4px 20px;
+  }
+
+  &:not(:first-of-type) {
+    margin-top: 16px;
+  }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+
+  & :global(.title) {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

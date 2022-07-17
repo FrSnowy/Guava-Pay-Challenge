@@ -30,4 +30,4 @@ const Headbar = () => (
   </div>
 );
 
-export default Headbar
+export default React.memo(Headbar);

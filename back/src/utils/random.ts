@@ -11,5 +11,5 @@ export const randomDateTime = () => {
   const m = numAsStr(randomIntFromInterval(0, 59));
   const s = numAsStr(randomIntFromInterval(0, 59));
 
-  return `${year}-${month}-${day}T${h}:${m}:${s}`;
+  return `${year}-${month}-${day}T${h}:${m}:${s}.000Z`;
 }

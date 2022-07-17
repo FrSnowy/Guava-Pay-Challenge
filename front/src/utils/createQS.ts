@@ -2,6 +2,9 @@ const createQS = (baseURL: `/${string}`, params: Record<string, any>): `/${strin
   const urlParams = Object.keys(params).map(k => {
     k = k as keyof typeof params;
     if (params[k] === undefined || params[k] === null) return null;
+    if (Array.isArray(params[k])) {
+      params[k] = JSON.stringify(params[k]);
+    }
     const encodedKey = encodeURIComponent(k);
     const val = encodeURIComponent(params[k]);
     return `${encodedKey}=${val}`;

@@ -13,11 +13,21 @@ export type Transaction = {
   merchantInfo: string,
 }
 
+type TransactionFilters = {
+  limit?: number,
+  offset?: number,
+  cardID?: string,
+  accountID?: string,
+  currency?: string,
+  dateRange?: [string, string],
+};
+
 export type TransactionsModelT = {
+  loading: boolean,
   totalCount: number,
   transactions: Transaction[],
   filters: TransactionsUniqueFilterValues,
-  getTransactions: (p: { institutionID: number, limit?: number, offset?: number }) => Promise<Transaction[]>,
+  getTransactions: (institutionID: number, p: TransactionFilters) => Promise<Transaction[]>,
   getFilterUniqueValues: (p: { institutionID: number }) => Promise<TransactionsUniqueFilterValues>,
 };
 
@@ -29,8 +39,8 @@ type TransactionsResponse = BaseResponseT & {
 }
 
 export type TransactionsUniqueFilterValues = {
-  cardIDs: number[],
-  cardAccount: number[],
+  cardIDs: { cardID: number, maskedCardNumber: string }[],
+  cardAccount: { id: number, firstName: string, lastName: string }[],
   currency: CurrencyT[],
 }
 
@@ -39,6 +49,7 @@ type TransactionsUniqueFilterValuesResponse = BaseResponseT & {
 }
 
 class TransactionsModel implements TransactionsModelT {
+  @observable loading = true;
   @observable transactions: Transaction[] = [];
   @observable totalCount: number = 0;
   @observable filters: TransactionsUniqueFilterValues = { cardIDs: [], cardAccount: [], currency: [] };
@@ -48,12 +59,14 @@ class TransactionsModel implements TransactionsModelT {
   }
 
   @action('Get transactions')
-  getTransactions = async ({ institutionID, limit, offset }: { institutionID: number, limit?: number, offset?: number }) => {
-    const qs = createQS('/transactions', { limit, offset, institutionID });
+  getTransactions = async (institutionID: number, filters: TransactionFilters) => {
+    this.loading = true;
+    const qs = createQS('/transactions', { institutionID, ...filters });
     const resp = await fetch<TransactionsResponse>(qs);
     if (resp.statusCode !== 200) return [];
     this.transactions = resp.data.transactions;
     this.totalCount = resp.data.totalCount;
+    this.loading = false;
     return resp.data.transactions;
   }
 

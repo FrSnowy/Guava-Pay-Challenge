@@ -5,16 +5,20 @@ export type CurrencyProps = {
   currency: CurrencyT,
 }
 
-const Currency: React.FC<CurrencyProps> = ({ currency }) => {
+export const transformCurrency = (currency: CurrencyT) => {
   switch (currency) {
     case 'AZN':
-      return <span>₼</span>;
+      return '₼';
     case 'EUR':
-      return <span>€</span>;
+      return '€';
     case 'USD':
     default:
-      return <span>$</span>;
+      return '$';
   }
+}
+
+const Currency: React.FC<CurrencyProps> = ({ currency }) => {
+  return <span>{transformCurrency(currency)}</span>
 }
 
 export default Currency;
