@@ -3,6 +3,7 @@ import Currency from "../constants/currency";
 import { randomFrom, randomIntFromInterval, randomDateTime } from "../utils/random";
 import type { GenerateRouteFn } from "types";
 import { DATA_OK, NO_PARAMETER_RESPONSE } from "../constants/responses";
+import { Account, getAccounts } from "./accounts";
 
 type Transaction = {
   transactionID: number,
@@ -13,6 +14,10 @@ type Transaction = {
   transactionDate: string,
   merchantInfo: string,
 }
+
+type TransactionResponse = Transaction & {
+  cardAccountMeta: Account | undefined,
+};
 
 type GeneratorOptData = {
   allowedCardIDs: number[],
@@ -36,16 +41,20 @@ export const getTransactions = (
     offset?: number,
     limit?: number,
   }
-): Transaction[] => {
+): TransactionResponse[] => {
   let { offset, limit } = filters;
 
   if (!transactionGenerator.cache[institutionID]) return [];
   offset = parseInt(`${offset}`, 10);
   limit = parseInt(`${limit}`, 10);
 
-  const transactions = transactionGenerator.cache[institutionID]!
+const transactions: TransactionResponse[] = transactionGenerator.cache[institutionID]!
     .slice(offset, limit ? offset + limit : undefined)
-    .sort((a, b) => Date.parse(b.transactionDate) - Date.parse(a.transactionDate));
+    .sort((a, b) => Date.parse(b.transactionDate) - Date.parse(a.transactionDate))
+    .map(transaction => ({
+      ...transaction,
+      cardAccountMeta: getAccounts(institutionID, { accountID: transaction.cardAccount })[0]
+    }));
 
   return transactions;
 }

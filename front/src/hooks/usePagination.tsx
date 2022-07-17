@@ -14,17 +14,21 @@ const usePagination = ({ initialPage, totalPages }: UsePaginationT) => {
     setCurrentPage(pageNum);
   }, []);
   
-  const view = React.useMemo(() => (
-    <Pagination
-      defaultActivePage={currentPage}
-      totalPages={totalPages}
-      onPageChange={onPageChangeHandler}
-      prevItem={false}
-      nextItem={false}
-      lastItem={false}
-      firstItem={false}
-    />
-  ), [currentPage, totalPages, onPageChangeHandler]);
+  const view = React.useMemo(() => {
+    if (!totalPages) return null;
+
+    return (
+      <Pagination
+        defaultActivePage={currentPage}
+        totalPages={totalPages}
+        onPageChange={onPageChangeHandler}
+        prevItem={false}
+        nextItem={false}
+        lastItem={false}
+        firstItem={false}
+      />
+    )
+}, [currentPage, totalPages, onPageChangeHandler]);
 
   return { view, currentPage }
 }

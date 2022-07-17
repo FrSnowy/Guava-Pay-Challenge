@@ -18,8 +18,7 @@ const TranscationCard = ({ amount, currency, transactionDate }: Transaction) => 
       <Card.Content>
         <Card.Header>
           <a href = "/">
-            Transaction for {amount}
-            <Currency currency={currency} />
+            {amount}<Currency currency={currency} /> transaction 
           </a>
         </Card.Header>
         <Card.Description>

@@ -3,7 +3,7 @@ import createCachedGenerator from "../utils/create-cached-generator";
 import type { GenerateRouteFn } from "types";
 import { DATA_OK, NO_PARAMETER_RESPONSE } from "../constants/responses";
 
-type Account = {
+export type Account = {
   id: number,
   institutionID: number,
   firstName: string,
