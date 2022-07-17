@@ -11,6 +11,7 @@ import usePagination from '@/hooks/usePagination';
 import { transformCurrency } from '@/components/Currency';
 import useFilter from '@/hooks/useFilter';
 import useDateRangeFilter from '@/hooks/useDateRangeFilter';
+import useAmountFilter from '@/hooks/useAmountFilter';
 
 const TRANSACTIONS_PER_PAGE = 10;
 
@@ -43,6 +44,10 @@ const TransactionsPage = observer(() => {
 
   const { view: dateFilterView, value: dateRange } = useDateRangeFilter({
     paramName: 'transactions_filter_by_date',
+  });
+
+  const { view: amountFilterView, min: minAmount, max: maxAmount } = useAmountFilter({
+    paramName: 'transactions_filter_by_amount',
   });
 
   React.useEffect(() => {
@@ -83,6 +88,7 @@ const TransactionsPage = observer(() => {
         {accountFilterView}
         {currencyFilterView}
         {dateFilterView}
+        {amountFilterView}
       </Sidebar>
       <div className={style.container}>
         {transactionsView}
