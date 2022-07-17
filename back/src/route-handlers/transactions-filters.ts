@@ -5,7 +5,7 @@ import { Card, getCards } from "./cards";
 import { transactionGenerator } from "./transactions";
 
 type TransactionsQuery = Partial<{
-  institutionID: number,
+  institutionID: number | string,
 }>;
 
 type CardFilter = Pick<Card, 'cardID' | 'maskedCardNumber'>;

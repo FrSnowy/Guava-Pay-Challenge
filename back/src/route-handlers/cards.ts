@@ -19,7 +19,7 @@ type CardGeneratorData = {
   allowedAccounts: number[]
 }
 
-const generateCard = (_: number, i: number, data: CardGeneratorData): Card => ({
+const generateCard = (_: number | string, i: number, data: CardGeneratorData): Card => ({
   cardAccount: randomFrom(data?.allowedAccounts as [number, ...number[]]),
   cardID: i,
   maskedCardNumber: `${randomIntFromInterval(1111, 9999)} **** **** ${randomIntFromInterval(1111, 9999)}`,
@@ -31,10 +31,8 @@ const generateCard = (_: number, i: number, data: CardGeneratorData): Card => ({
 
 export const cardsGenerator = createCachedGenerator<Card, CardGeneratorData>(generateCard);
 export const getCards = (
-  institutionID: number,
-  filters: {
-    cardID?: number | string | undefined,
-  },
+  institutionID: number | string,
+  filters: Omit<CardsQuery, 'institutionID'>
 ) => {
   const cards: Card[] | undefined = cardsGenerator.cache[institutionID];
   if (!cards) return [];
@@ -44,8 +42,8 @@ export const getCards = (
 }
 
 type CardsQuery = Partial<{
-  institutionID: number,
-  cardID: number,
+  institutionID: number | string,
+  cardID: number | string | undefined,
 }>;
 
 const registerCardsRoute: GenerateRouteFn = s => s.get<{

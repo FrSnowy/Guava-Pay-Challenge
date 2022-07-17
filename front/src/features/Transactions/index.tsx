@@ -64,8 +64,10 @@ const TransactionsPage = observer(() => {
       accountID,
       currency,
       dateRange,
+      minAmount,
+      maxAmount,
     });
-  }, [getTransactions, currentPage, cardID, accountID, currency, dateRange]);
+  }, [getTransactions, currentPage, cardID, accountID, currency, dateRange, minAmount, maxAmount]);
 
   const transactionsView = React.useMemo(() => {
     if (loading) return (

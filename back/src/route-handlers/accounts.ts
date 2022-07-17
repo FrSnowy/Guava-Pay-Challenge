@@ -5,12 +5,12 @@ import { DATA_OK, NO_PARAMETER_RESPONSE } from "../constants/responses";
 
 export type Account = {
   id: number,
-  institutionID: number,
+  institutionID: number | string,
   firstName: string,
   lastName: string,
 }
 
-const generateCard = (forInstitution: number, i: number): Account => ({
+const generateCard = (forInstitution: number | string, i: number): Account => ({
   id: i,
   firstName: randomFrom(['Randy', 'Jim', 'Bob', 'David', 'Anna', 'Helen', 'Ivan', 'Olga']),
   lastName: randomFrom(['Any', 'Smiley', 'Random', 'Other', 'Another', 'Moreone']),
@@ -20,10 +20,8 @@ const generateCard = (forInstitution: number, i: number): Account => ({
 export const accountGenerator = createCachedGenerator(generateCard);
 
 export const getAccounts = (
-  institutionID: number,
-  filters: {
-    accountID?: number | string | undefined,
-  },
+  institutionID: number | string,
+  filters: Omit<AccountQuery, 'institutionID'>
 ) => {
   const accounts: Account[] | undefined = accountGenerator.cache[institutionID];
   if (!accounts) return [];
@@ -33,8 +31,8 @@ export const getAccounts = (
 }
 
 type AccountQuery = Partial<{
-  institutionID: number,
-  accountID: number,
+  institutionID: number | string,
+  accountID: number | string | undefined,
 }>;
 
 const registerAccountsRoute: GenerateRouteFn = s => s.get<{

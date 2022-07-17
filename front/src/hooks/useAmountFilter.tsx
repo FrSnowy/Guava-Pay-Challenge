@@ -16,37 +16,41 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
   const [realMax, setRealMax] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
-    if (!min && !max) {
-      setRealMin(undefined);
-      setRealMax(undefined);
-      return;
-    }
-
-    if (min && !max) {
-      setRealMin(min);
-      setRealMax(undefined);
-      return;
-    }
-
-    if (max && !min) {
-      setRealMin(undefined);
-      setRealMax(max);
-      return;
-    }
-
-    if (min && max) {
-      const parsedMin = parseFloat(min);
-      const parsedMax = parseFloat(max);
-      if (parsedMin > parsedMax) {
+    const timeoutID = window.setTimeout(() => {
+      if (!min && !max) {
+        setRealMin(undefined);
+        setRealMax(undefined);
+        return;
+      }
+  
+      if (min && !max) {
         setRealMin(min);
         setRealMax(undefined);
         return;
       }
+  
+      if (max && !min) {
+        setRealMin(undefined);
+        setRealMax(max);
+        return;
+      }
+  
+      if (min && max) {
+        const parsedMin = parseFloat(min);
+        const parsedMax = parseFloat(max);
+        if (parsedMin > parsedMax) {
+          setRealMin(min);
+          setRealMax(undefined);
+          return;
+        }
+  
+        setRealMin(min);
+        setRealMax(max);
+        return;
+      }
+    }, 500);
 
-      setRealMin(min);
-      setRealMax(max);
-      return;
-    }
+    return () => window.clearTimeout(timeoutID);
   }, [min, max]);
 
   const name = React.useMemo(() => {

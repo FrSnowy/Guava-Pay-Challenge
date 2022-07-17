@@ -20,6 +20,8 @@ type TransactionFilters = {
   accountID?: string,
   currency?: string,
   dateRange?: [string, string],
+  minAmount?: string,
+  maxAmount?: string,
 };
 
 export type TransactionsModelT = {

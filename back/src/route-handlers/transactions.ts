@@ -25,7 +25,7 @@ type GeneratorOptData = {
   allowedAccounts: number[],
 }
 
-const generateTransaction = (_: number, i: number, data: GeneratorOptData): Transaction => ({
+const generateTransaction = (_: number | string, i: number, data: GeneratorOptData): Transaction => ({
   transactionID: i,
   cardAccount: randomFrom(data.allowedAccounts as [number, ...number[]]),
   cardID: randomFrom(data.allowedCardIDs as [number, ...number[]]),
@@ -37,17 +37,10 @@ const generateTransaction = (_: number, i: number, data: GeneratorOptData): Tran
 
 export const transactionGenerator = createCachedGenerator<Transaction, GeneratorOptData>(generateTransaction);
 export const getTransactions = (
-  institutionID: number,
-  filters: {
-    offset?: number | string | undefined,
-    limit?: number | string | undefined,
-    cardID?: number | string | undefined,
-    accountID?: number | string | undefined,
-    currency?: string | undefined,
-    dateRange?: string,
-  }
+  institutionID: number | string,
+  filters: Omit<TransactionsQuery, 'institutionID'>,
 ): { totalCount: number, transactions: TransactionResponse[] } => {
-  let { offset = 0, limit, cardID, accountID, currency, dateRange } = filters;
+  let { offset = 0, limit, cardID, accountID, currency, dateRange, minAmount, maxAmount } = filters;
 
   const parsedDateRange: [string, string] | undefined = dateRange ? JSON.parse(dateRange) : undefined;
 
@@ -56,6 +49,9 @@ export const getTransactions = (
   limit = parseInt(`${limit}`, 10);
   cardID = parseInt(`${cardID}`, 10);
   accountID = parseInt(`${accountID}`, 10);
+
+  const minNumericAmount = parseInt(`${minAmount}`, 10);
+  const maxNumericAmount = parseInt(`${maxAmount}`, 10);
 
   const filteredTransactions: Transaction[] = transactionGenerator.cache[institutionID]!
     .filter(transaction => cardID ? transaction.cardID === cardID : true)
@@ -67,6 +63,16 @@ export const getTransactions = (
       const minDate = getStrDateMs(parsedDateRange[0]);
       const maxDate = getStrDateMs(parsedDateRange[1]);
       return tDate >= minDate && tDate <= maxDate;
+    })
+    .filter(transaction => {
+      if (Number.isNaN(minNumericAmount) && Number.isNaN(maxNumericAmount)) return true;
+      if (!Number.isNaN(minNumericAmount) && Number.isNaN(maxNumericAmount)) {
+        return transaction.amount >= minNumericAmount;
+      }
+      if (!Number.isNaN(maxNumericAmount) && Number.isNaN(minNumericAmount)) {
+        return transaction.amount <= maxNumericAmount;
+      }
+      return transaction.amount >= minNumericAmount && transaction.amount <= maxNumericAmount;
     });
 
   const transactions: TransactionResponse[] = filteredTransactions
@@ -81,13 +87,15 @@ export const getTransactions = (
 }
 
 type TransactionsQuery = Partial<{
-  institutionID: number,
-  limit: number,
-  offset: number,
-  cardID: number,
-  accountID: number,
+  institutionID: number | string,
+  limit: number | string,
+  offset: number | string,
+  cardID: number | string,
+  accountID: number | string,
   currency: string,
   dateRange: string,
+  minAmount: number | string,
+  maxAmount: number | string,
 }>;
 
 const registerTransactionsRoute: GenerateRouteFn = s => s.get<{
