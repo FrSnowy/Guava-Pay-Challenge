@@ -15,16 +15,14 @@ type Transaction = {
 }
 
 type GeneratorOptData = {
-  allowedCardIDs: number[]
+  allowedCardIDs: number[],
+  allowedAccounts: number[],
 }
 
-const generateTransaction = (forAccount: number, i: number, data?: GeneratorOptData): Transaction => ({
+const generateTransaction = (_: number, i: number, data: GeneratorOptData): Transaction => ({
   transactionID: i,
-  cardAccount: forAccount,
-  cardID: 
-    (data?.allowedCardIDs && data.allowedCardIDs.length > 0)
-      ? randomFrom(data.allowedCardIDs as [number, ...number[]])
-      : randomIntFromInterval(0, 1000),
+  cardAccount: randomFrom(data.allowedAccounts as [number, ...number[]]),
+  cardID: randomFrom(data.allowedCardIDs as [number, ...number[]]),
   currency: randomFrom([Currency.AZN, Currency.EUR, Currency.USD]),
   transactionDate: randomDateTime(),
   amount: randomIntFromInterval(0, 1000),
@@ -32,9 +30,28 @@ const generateTransaction = (forAccount: number, i: number, data?: GeneratorOptD
 });
 
 export const transactionGenerator = createCachedGenerator<Transaction, GeneratorOptData>(generateTransaction);
+export const getTransactions = (
+  institutionID: number,
+  filters: {
+    offset?: number,
+    limit?: number,
+  }
+): Transaction[] => {
+  let { offset, limit } = filters;
+
+  if (!transactionGenerator.cache[institutionID]) return [];
+  offset = parseInt(`${offset}`, 10);
+  limit = parseInt(`${limit}`, 10);
+
+  const transactions = transactionGenerator.cache[institutionID]!
+    .slice(offset, limit ? offset + limit : undefined)
+    .sort((a, b) => Date.parse(b.transactionDate) - Date.parse(a.transactionDate));
+
+  return transactions;
+}
 
 type TransactionsQuery = Partial<{
-  accountID: number,
+  institutionID: number,
   limit: number,
   offset: number,
 }>;
@@ -42,21 +59,16 @@ type TransactionsQuery = Partial<{
 const registerTransactionsRoute: GenerateRouteFn = s => s.get<{
   Querystring: TransactionsQuery
 }>('/transactions', (req, reply) => {
-  let { accountID, offset = 0, limit } = req.query;
+  let { institutionID, offset = 0, limit } = req.query;
   offset = parseInt(`${offset}`, 10);
   limit = parseInt(`${limit}`, 10);
 
-  if (!accountID) {
-    return NO_PARAMETER_RESPONSE(reply, ['accountID']);
+  if (!institutionID) {
+    return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
   }
 
-  if (!transactionGenerator.cache[accountID]) return DATA_OK(reply, { transactions: [], totalCount: 0 });
-
-  const transactions = transactionGenerator.cache[accountID]!
-    .slice(offset, limit ? offset + limit : undefined)
-    .sort((a, b) => Date.parse(b.transactionDate) - Date.parse(a.transactionDate));
-
-  return DATA_OK(reply, { transactions, totalCount: transactionGenerator.cache[accountID]!.length });
+  const transactions = getTransactions(institutionID, { offset, limit });
+  return DATA_OK(reply, { transactions, totalCount: (transactionGenerator.cache[institutionID] || []).length });
 });
 
 export default registerTransactionsRoute;

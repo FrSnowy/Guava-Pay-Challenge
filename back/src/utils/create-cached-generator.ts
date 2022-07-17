@@ -1,16 +1,18 @@
-const createCachedGenerator = <T, DataT>(generateOne: (forAccount: number, i: number, optData?: DataT) => T) => {
+const createCachedGenerator = <T, DataT = {}>(
+  generateOne: (forInstitution: number, i: number, optData: DataT) => T
+) => {
   const cache: Record<number, T[]> = {};
 
-  const generate = (count: number, forAccount: number,  optData?: DataT): T[] => {
-    const list: T[] = cache[forAccount] || [];
+  const generate = (count: number, forInstitution: number, optData: DataT): T[] => {
+    const list: T[] = cache[forInstitution] || [];
     if (list.length > 0 && list.length >= count) return list.slice(0, count);
 
-    cache[forAccount] =  [...list];
-    for (let i = cache[forAccount]!.length; i < count; i++) {
-      cache[forAccount]!.push(generateOne(forAccount, i, optData))
+    cache[forInstitution] =  [...list];
+    for (let i = cache[forInstitution]!.length; i < count; i++) {
+      cache[forInstitution]!.push(generateOne(forInstitution, i, optData))
     }
 
-    return cache[forAccount]!;
+    return cache[forInstitution]!;
   }
 
   return {generate, cache};

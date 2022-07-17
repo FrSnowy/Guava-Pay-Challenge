@@ -16,10 +16,10 @@ const registerAuthHandler: GenerateRouteFn = s => s.post<{
   if (!account) return NO_PARAMETER_RESPONSE(reply, ['account']);
 
   const indexOfProvidedAccount = accountsCache.findIndex(acc => acc === account);
-  if (indexOfProvidedAccount > -1) return DATA_OK(reply, { accountID: indexOfProvidedAccount });
+  if (indexOfProvidedAccount > -1) return DATA_OK(reply, { institutionID: indexOfProvidedAccount });
 
   accountsCache.push(account);
-  return DATA_OK(reply, { accountID: accountsCache.length - 1 });
+  return DATA_OK(reply, { institutionID: accountsCache.length - 1 });
 });
 
 export default registerAuthHandler;

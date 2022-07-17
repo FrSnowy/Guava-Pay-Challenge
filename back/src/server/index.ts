@@ -6,6 +6,7 @@ import registerCardsRoute from '../route-handlers/cards';
 import registerGenerateMockDataRoute from '../route-handlers/generateMockData';
 import registerAuthHandler from '../route-handlers/auth';
 import registerTransactionFiltersRoute from '../route-handlers/transactions-filters';
+import registerAccountsRoute from '../route-handlers/accounts';
 
 const server = fastify();
 
@@ -26,6 +27,7 @@ server.register(cors, {
 
 [
   registerAuthHandler,
+  registerAccountsRoute,
   registerCardsRoute,
   registerTransactionsRoute,
   registerTransactionFiltersRoute,

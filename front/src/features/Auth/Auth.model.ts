@@ -3,19 +3,19 @@ import { observable, action, makeObservable } from 'mobx';
 
 export type AuthModelT = {
   authorized: boolean,
-  accountID?: number,
+  institutionID?: number,
   auth: (data: { account: string }) => Promise<any>,
 };
 
 type AuthResponse = BaseResponseT & {
   data: {
-    accountID: number,
+    institutionID: number,
   },
 }
 
 class AuthModel implements AuthModelT {
   @observable authorized: boolean = false;
-  @observable accountID?: number;
+  @observable institutionID?: number;
 
   constructor() {
     makeObservable(this);
@@ -29,32 +29,17 @@ class AuthModel implements AuthModelT {
     });
 
     if (getAccID.statusCode !== 200) return false;
-    this.accountID = getAccID.data.accountID;
-    return await this.generateMockData(data.account);
+    this.institutionID = getAccID.data.institutionID;
+    return await this.generateMockData();
   }
 
   @action('Generate mock data for account')
-  private generateMockData = async(account: string) => {
-    if (this.accountID === null || this.accountID === undefined) return;
-
-    const [_, paramsStr] = account.split(':');
-    const params = paramsStr ? paramsStr.split(',') : [];
-
-    const findParam = (param: string, defVal: number) => {
-      let count = parseInt(
-        params.find(p => p.includes(`${param}=`))?.split('=')[1] || `${defVal}`,
-        10
-      );
-
-      return Number.isNaN(count) ? defVal : count;
-    }
-
-    const cardsCount = findParam('c', 5);
-    const transactionsCount = findParam('t', 25);
+  private generateMockData = async() => {
+    if (this.institutionID === null || this.institutionID === undefined) return;
 
     const generateMockData = await fetch<BaseResponseT>('/generate', {
       method: 'POST',
-      body: JSON.stringify({ accountID: this.accountID, cardsCount, transactionsCount })
+      body: JSON.stringify({ institutionID: this.institutionID })
     });
 
     if (generateMockData.statusCode !== 500) {

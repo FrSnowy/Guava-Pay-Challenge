@@ -11,7 +11,7 @@ import usePagination from '@/hooks/usePagination';
 const TRANSACTIONS_PER_PAGE = 10;
 
 const TransactionsPage = observer(() => {
-  const { accountID } = useModel<AuthModelT>("AuthModel");
+  const { institutionID } = useModel<AuthModelT>("AuthModel");
   const { transactions, totalCount, getTransactions, getFilterUniqueValues } = useModel<TransactionsModelT>('TransactionsModel');
 
   const { view: paginationView, currentPage } = usePagination({
@@ -20,13 +20,13 @@ const TransactionsPage = observer(() => {
   });
 
   React.useEffect(() => {
-    if (accountID === undefined) return;
-    getFilterUniqueValues({ accountID });
-  }, [accountID, getFilterUniqueValues]);
+    if (institutionID === undefined) return;
+    getFilterUniqueValues({ institutionID });
+  }, [institutionID, getFilterUniqueValues]);
 
   React.useEffect(() => {
-    if (accountID === undefined) return;
-    getTransactions({ accountID, limit: TRANSACTIONS_PER_PAGE, offset: (currentPage - 1) * TRANSACTIONS_PER_PAGE });
+    if (institutionID === undefined) return;
+    getTransactions({ institutionID, limit: TRANSACTIONS_PER_PAGE, offset: (currentPage - 1) * TRANSACTIONS_PER_PAGE });
   }, [getTransactions, currentPage]);
 
   const transactionsView = React.useMemo(() => {

@@ -3,18 +3,18 @@ import { DATA_OK, NO_PARAMETER_RESPONSE } from "../constants/responses";
 import { transactionGenerator } from "./transactions";
 
 type TransactionsQuery = Partial<{
-  accountID: number,
+  institutionID: number,
 }>;
 
 const registerTransactionFiltersRoute: GenerateRouteFn = s => s.get<{
   Querystring: TransactionsQuery
 }>('/transactions/filters', (req, reply) => {
-  const { accountID } = req.query;
+  const { institutionID } = req.query;
   const { cache } = transactionGenerator;
 
-  if (!accountID) return NO_PARAMETER_RESPONSE(reply, ['accountID']);
+  if (!institutionID) return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
 
-  const transactions = cache[accountID];
+  const transactions = cache[institutionID];
 
   if (!transactions?.length) return DATA_OK(reply, {
     cardID: [],

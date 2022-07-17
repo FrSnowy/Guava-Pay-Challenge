@@ -15,8 +15,12 @@ type Card = {
   balance: number,
 }
 
-const generateCard = (forAccount: number, i: number): Card => ({
-  cardAccount: forAccount,
+type CardGeneratorData = {
+  allowedAccounts: number[]
+}
+
+const generateCard = (_: number, i: number, data: CardGeneratorData): Card => ({
+  cardAccount: randomFrom(data?.allowedAccounts as [number, ...number[]]),
   cardID: i,
   maskedCardNumber: `${randomIntFromInterval(1111, 9999)} **** **** **${randomIntFromInterval(11, 99)}`,
   expireDate: randomDateTime(),
@@ -25,21 +29,21 @@ const generateCard = (forAccount: number, i: number): Card => ({
   balance: parseFloat(`${randomIntFromInterval(0, 100000)}.${randomIntFromInterval(0, 99)}`),
 });
 
-export const cardsGenerator = createCachedGenerator(generateCard);
+export const cardsGenerator = createCachedGenerator<Card, CardGeneratorData>(generateCard);
 
 type CardsQuery = Partial<{
-  accountID: number,
+  institutionID: number,
   count: number,
 }>;
 
 const registerCardsRoute: GenerateRouteFn = s => s.get<{
   Querystring: CardsQuery
 }>('/cards', (req, reply) => {
-  if (!req.query.accountID) {
-    return NO_PARAMETER_RESPONSE(reply, ['accountID']);
+  if (!req.query.institutionID) {
+    return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
   }
-  if (!cardsGenerator.cache[req.query.accountID]) return DATA_OK(reply, []);
-  return DATA_OK(reply, cardsGenerator.cache[req.query.accountID]);
+  if (!cardsGenerator.cache[req.query.institutionID]) return DATA_OK(reply, []);
+  return DATA_OK(reply, cardsGenerator.cache[req.query.institutionID]);
 });
 
 export default registerCardsRoute;

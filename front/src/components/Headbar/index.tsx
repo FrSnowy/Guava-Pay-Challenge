@@ -16,12 +16,12 @@ const Headbar = () => (
         <Grid columns={2}>
           <Grid.Column>
             <a className={clsx(styles.link, styles.active)}>
-              My transactions
+              Institution transactions
             </a>
           </Grid.Column>
           <Grid.Column>
             <a className={styles.link}>
-              My cards
+              Institution cards
             </a>
           </Grid.Column>
         </Grid>

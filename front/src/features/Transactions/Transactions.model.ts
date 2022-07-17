@@ -17,8 +17,8 @@ export type TransactionsModelT = {
   totalCount: number,
   transactions: Transaction[],
   filters: TransactionsUniqueFilterValues,
-  getTransactions: (p: { accountID: number, limit?: number, offset?: number }) => Promise<Transaction[]>,
-  getFilterUniqueValues: (p: { accountID: number }) => Promise<TransactionsUniqueFilterValues>,
+  getTransactions: (p: { institutionID: number, limit?: number, offset?: number }) => Promise<Transaction[]>,
+  getFilterUniqueValues: (p: { institutionID: number }) => Promise<TransactionsUniqueFilterValues>,
 };
 
 type TransactionsResponse = BaseResponseT & {
@@ -48,8 +48,8 @@ class TransactionsModel implements TransactionsModelT {
   }
 
   @action('Get transactions')
-  getTransactions = async ({ accountID, limit, offset }: { accountID: number, limit?: number, offset?: number }) => {
-    const qs = createQS('/transactions', { limit, offset, accountID });
+  getTransactions = async ({ institutionID, limit, offset }: { institutionID: number, limit?: number, offset?: number }) => {
+    const qs = createQS('/transactions', { limit, offset, institutionID });
     const resp = await fetch<TransactionsResponse>(qs);
     if (resp.statusCode !== 200) return [];
     this.transactions = resp.data.transactions;
@@ -58,8 +58,8 @@ class TransactionsModel implements TransactionsModelT {
   }
 
   @action('Get transactions unique filter values')
-  getFilterUniqueValues = async({ accountID }: { accountID: number }): Promise<TransactionsUniqueFilterValues> => {  
-    const qs = createQS('/transactions/filters', { accountID });
+  getFilterUniqueValues = async({ institutionID }: { institutionID: number }): Promise<TransactionsUniqueFilterValues> => {  
+    const qs = createQS('/transactions/filters', { institutionID });
     const resp = await fetch<TransactionsUniqueFilterValuesResponse>(qs);
     if (resp.statusCode !== 200) return { cardIDs: [], cardAccount: [], currency: [] };
     this.filters = resp.data;

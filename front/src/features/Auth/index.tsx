@@ -34,18 +34,12 @@ const AuthPage = observer(() => {
           <Header as='h5' textAlign='center'>
             <Header.Content>Authorization</Header.Content>
           </Header>
-          <Input placeholder='Login' fluid name='account' required />
+          <Input placeholder='Institution login' fluid name='account' required />
           <Button primary fluid role='submit' loading={loading} disabled={loading}>Submit</Button>
         </Container>
       </form>
       <span className={styles.notify}>
-        It's the mock auth form used only to generate unique mock data for every different login. Feel free to pass any login you want.
-      </span>
-      <span className={styles.notify}>
-        You can generate as many cards and transactions as you want by providing c= and t= params into the login field like this: <strong>test:c=10,t=10;</strong>
-      </span>
-      <span className={styles.notify}>
-        If params are not provided, 5 cards and 25 transactions will be created
+        It's the mock auth form used only to generate unique mock data for every different login. Feel free to pass any institution login you want.
       </span>
     </div>
   )
