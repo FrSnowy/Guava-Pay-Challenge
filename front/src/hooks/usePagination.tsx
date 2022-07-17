@@ -15,7 +15,7 @@ const usePagination = ({ initialPage, totalPages }: UsePaginationT) => {
   }, []);
   
   const view = React.useMemo(() => {
-    if (!totalPages) return null;
+    if (totalPages < 2) return null;
 
     return (
       <Pagination
