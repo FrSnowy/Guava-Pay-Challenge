@@ -6,13 +6,15 @@ import type * as T from "./types";
 import { transactionsQueryParser } from "./parsers";
 import transactionGenerator from "./generator";
 import supportOffsetLimit from "../../utils/support-offset-limit";
+import { getCards } from "../cards";
 
 export const getTransactions = (institutionID: number, filters: T.TransactionsFilter) => {
-  let { offset = 0, limit, cardID, accountID, currency, dateRange, minAmount, maxAmount } = filters;
+  let { offset = 0, limit, cardID, accountID, transactionID, currency, dateRange, minAmount, maxAmount } = filters;
   if (!transactionGenerator.cache[institutionID]) return { totalCount: 0, transactions: [] };
 
-  const cardIDFilter: T.TransactionFilter = t => cardID === undefined ? true : t.cardID === cardID;
-  const accountIDFilter: T.TransactionFilter = t => accountID === undefined ? true : t.cardAccount === accountID;
+  const transactionIDFilter: T.TransactionFilter = t => transactionID ? t.transactionID === transactionID : true;
+  const cardIDFilter: T.TransactionFilter = t => cardID ? t.cardID === cardID : true;
+  const accountIDFilter: T.TransactionFilter = t => accountID ? t.cardAccount === accountID : true;
   const currencyFilter: T.TransactionFilter = t => currency === undefined ? true : t.currency === currency;
   const dateRangeFilter: T.TransactionFilter = t => {
     if (dateRange === undefined) return true;
@@ -29,6 +31,7 @@ export const getTransactions = (institutionID: number, filters: T.TransactionsFi
   };
 
   const filteredTransactions: T.Transaction[] = transactionGenerator.cache[institutionID]!
+    .filter(transactionIDFilter)
     .filter(cardIDFilter)
     .filter(accountIDFilter)
     .filter(currencyFilter)
@@ -39,7 +42,8 @@ export const getTransactions = (institutionID: number, filters: T.TransactionsFi
     .sort((a, b) => Date.parse(b.transactionDate) - Date.parse(a.transactionDate))
     .map(transaction => ({
       ...transaction,
-      cardAccountMeta: getAccounts(institutionID, { accountID: transaction.cardAccount })[0]
+      cardAccountMeta: getAccounts(institutionID, { accountID: transaction.cardAccount })[0],
+      cardMeta: getCards(institutionID, { cardID })[0],
     }));
 
   return { totalCount: filteredTransactions.length, transactions };
@@ -49,7 +53,7 @@ const registerTransactionsRoute: GenerateRouteFn = s => s.get<{
   Querystring: T.TransactionsQuery
 }>('/transactions', (req, reply) => {
   const { institutionID, filter } = transactionsQueryParser(req.query);
-  if (institutionID === undefined) return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
+  if (!institutionID) return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
   return DATA_OK(reply, getTransactions(institutionID, filter));
 });
 

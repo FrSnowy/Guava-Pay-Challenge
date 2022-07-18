@@ -6,7 +6,7 @@ import type * as T from './types';
 
 const generateCard = (_: number, i: number, data: T.CardGeneratorData): T.Card => ({
   cardAccount: randomFrom(data?.allowedAccounts as [number, ...number[]]),
-  cardID: i,
+  cardID: i + 1,
   maskedCardNumber: `${randomIntFromInterval(1111, 9999)} **** **** ${randomIntFromInterval(1111, 9999)}`,
   expireDate: randomDateTime(),
   currency: randomFrom([Currency.AZN, Currency.EUR, Currency.USD]),

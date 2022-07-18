@@ -1,6 +1,19 @@
 :global(.ui.card).card {
   width: 100%;
+
+  & :global(.header) {
+    margin: 0 0 0.5em 0;
+  }
 }
-:global(.ui.card).card :global(.content) {
-  padding: 2em 1.5em 1.5em;
+
+:global(.ui.image).avatar{
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  width: 64px;
+  height: 64px;
+  background-color: #efefef;
+}
+
+.author {
+  margin-top: 0.5em;
 }

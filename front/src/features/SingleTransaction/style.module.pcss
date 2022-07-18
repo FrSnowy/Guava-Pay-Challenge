@@ -1,0 +1,62 @@
+:global(.ui.grid).container, .container {
+  margin-top: 2em;
+
+  &:not(:last-of-type) {
+    padding-bottom: 1em;
+    border-bottom: 1px solid #efefef;
+  }
+
+  & ~ .container, & ~ :global(.ui.grid).container {
+    margin-top: 3em;
+  }
+}
+
+.transaction, .card {
+  & div {
+    font-size: 16px;
+    line-height: 22px;
+    &:not(:last-of-type) {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+:global(.ui.grid).cardContent {
+  margin-top: 1em;
+}
+
+:global(.ui.image).avatar{
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  width: 64px;
+  height: 64px;
+  background-color: #efefef;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+
+  & img {
+    margin-right: 1.5em;
+  }
+
+  & span {
+    font-size: 16px;
+  }
+}
+
+.status {
+  display: inline-block;
+  padding: 16px;
+  border: 1px solid #afafaf;
+
+  &.blocked {
+    color: #a00;
+    border-color: #a00;
+  }
+  &.active {
+    color: #0a0;
+    border-color: #0a0;
+  }
+}

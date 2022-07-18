@@ -9,13 +9,13 @@ type GeneratorOptData = {
 }
 
 const generateTransaction = (_: number, i: number, data: GeneratorOptData): T.Transaction => ({
-  transactionID: i,
+  transactionID: i + 1,
   cardAccount: randomFrom(data.allowedAccounts as [number, ...number[]]),
   cardID: randomFrom(data.allowedCardIDs as [number, ...number[]]),
   currency: randomFrom([Currency.AZN, Currency.EUR, Currency.USD]),
   transactionDate: randomDateTime(),
   amount: randomIntFromInterval(0, 1000),
-  merchantInfo: randomFrom(['Merchant info 1', 'Merchant info 2', 'Merchant info 3']),
+  merchantInfo: randomFrom(['Aamzon', 'PizzaHut', 'VkusnoITochka', 'Google', 'Youtube', 'Spotify']),
 });
 
 const transactionGenerator = createCachedGenerator<T.Transaction, GeneratorOptData>(generateTransaction);

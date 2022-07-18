@@ -13,10 +13,10 @@ const registerAuthRoute: GenerateRouteFn = s => s.post<{ Body: string }>('/auth'
   const { account } = parsedBody;
 
   const institutionID = institutions.findIndex(inst => inst === account);
-  if (institutionID > -1) return DATA_OK(reply, { institutionID });
+  if (institutionID > -1) return DATA_OK(reply, { institutionID: institutionID + 1 });
 
   institutions.push(account);
-  return DATA_OK(reply, { institutionID: institutions.length - 1 });
+  return DATA_OK(reply, { institutionID: institutions.length });
 });
 
 export default registerAuthRoute;

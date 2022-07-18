@@ -1,10 +1,13 @@
 import fetch, { BaseResponseT } from '@/api';
 import { observable, action, makeObservable } from 'mobx';
 
+export const SESSION_ID_NAME = 'institutionID';
+
 export type AuthModelT = {
   authorized: boolean,
   institutionID?: number,
   auth: (data: { account: string }) => Promise<any>,
+  logout: () => void,
 };
 
 type AuthResponse = BaseResponseT & {
@@ -14,8 +17,11 @@ type AuthResponse = BaseResponseT & {
 }
 
 class AuthModel implements AuthModelT {
-  @observable authorized: boolean = false;
-  @observable institutionID?: number;
+  @observable authorized: boolean = !!sessionStorage.getItem(SESSION_ID_NAME);
+  @observable institutionID?: number = parseInt(
+    sessionStorage.getItem(SESSION_ID_NAME) || '',
+    10
+  ) || undefined;
 
   constructor() {
     makeObservable(this);
@@ -30,12 +36,19 @@ class AuthModel implements AuthModelT {
 
     if (getAccID.statusCode !== 200) return false;
     this.institutionID = getAccID.data.institutionID;
+    sessionStorage.setItem(SESSION_ID_NAME, `${getAccID.data.institutionID}`);
     return await this.generateMockData();
+  }
+
+  logout = () => {
+    sessionStorage.removeItem(SESSION_ID_NAME);
+    this.authorized = false;
+    this.institutionID = undefined;
   }
 
   @action('Generate mock data for account')
   private generateMockData = async() => {
-    if (this.institutionID === null || this.institutionID === undefined) return;
+    if (!this.institutionID) return;
 
     const generateMockData = await fetch<BaseResponseT>('/generate', {
       method: 'POST',

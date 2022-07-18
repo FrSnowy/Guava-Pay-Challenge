@@ -11,6 +11,22 @@ export type Transaction = {
   currency: CurrencyT,
   transactionDate: string,
   merchantInfo: string,
+  cardAccountMeta: {
+    id: number,
+    firstName: string,
+    lastName: string,
+    avatar?: string,
+  },
+  //! Move to card type
+  cardMeta: {
+    cardAccount: number,
+    cardID: number,
+    maskedCardNumber: string,
+    expireDate: string,
+    currency: CurrencyT,
+    status: 'active' | 'blocked',
+    balance: number,
+  }
 }
 
 type TransactionFilters = {
@@ -33,7 +49,7 @@ export type TransactionsModelT = {
   getFilterUniqueValues: (p: { institutionID: number }) => Promise<TransactionsUniqueFilterValues>,
 };
 
-type TransactionsResponse = BaseResponseT & {
+export type TransactionsResponse = BaseResponseT & {
   data: {
     transactions: Transaction[],
     totalCount: number,

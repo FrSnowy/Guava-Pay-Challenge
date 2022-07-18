@@ -10,7 +10,7 @@ export const getAccounts = (institutionID: number, filters: T.AccountFilter) => 
   const accounts: T.Account[] | undefined = accountGenerator.cache[institutionID];
   if (!accounts) return [];
 
-  const accountIDFilter = (a: T.Account) => accountID === undefined ? true : a.id === accountID;
+  const accountIDFilter = (a: T.Account) => accountID ? a.id === accountID : true;
 
   const filteredAccounts = accounts.filter(accountIDFilter);
   return filteredAccounts;

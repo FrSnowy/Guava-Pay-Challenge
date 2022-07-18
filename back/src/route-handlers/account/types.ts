@@ -1,8 +1,9 @@
 export type Account = {
   id: number,
-  institutionID: number | string,
+  institutionID: number,
   firstName: string,
   lastName: string,
+  avatar?: string | undefined,
 }
 
 export type AccountQuery = Partial<{

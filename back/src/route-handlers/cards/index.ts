@@ -9,7 +9,9 @@ export const getCards = (institutionID: number, filters: T.CardsFilter) => {
   if (!cards) return [];
 
   const { cardID } = filters;
-  return cardID === undefined ? cards : cards.filter(c => c.cardID === parseInt(`${cardID}`, 10))
+  const filteredCards = cards.filter(c => cardID ? c.cardID === cardID : true)
+
+  return filteredCards
 }
 
 const registerCardsRoute: GenerateRouteFn = s => s.get<{ Querystring: T.CardsQuery }>('/cards', (req, reply) => {

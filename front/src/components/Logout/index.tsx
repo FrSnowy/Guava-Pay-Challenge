@@ -1,0 +1,20 @@
+import React from 'react';
+import style from './style.module.pcss';
+import { Button } from 'semantic-ui-react';
+import { useNavigate } from 'react-router-dom';
+import useModel, { AuthModelT } from '@/root-store';
+import { observer } from 'mobx-react';
+
+const Logout: React.FC<{}> = observer(() => {
+  const { logout } = useModel<AuthModelT>("AuthModel");
+
+  return (
+    <div className={style.container}>
+      <Button secondary onClick={logout}>
+        Logout
+      </Button>
+    </div>
+  )
+});
+
+export default Logout;

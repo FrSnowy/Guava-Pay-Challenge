@@ -8,6 +8,7 @@ export const transactionsQueryParser = (query: TransactionsQuery): ParsedTransac
   const offset = strToNumOrUndefined(query.offset);
   const cardID = strToNumOrUndefined(query.cardID);
   const accountID = strToNumOrUndefined(query.accountID);
+  const transactionID = strToNumOrUndefined(query.transactionID);
   const currency = query.currency ? query.currency as Currency : undefined;
   const dateRange = (() => {
     if (!query.dateRange) return undefined;
@@ -21,6 +22,6 @@ export const transactionsQueryParser = (query: TransactionsQuery): ParsedTransac
 
   return {
     institutionID,
-    filter: { limit, offset, cardID, accountID, currency, dateRange, minAmount, maxAmount },
+    filter: { limit, offset, cardID, accountID, transactionID, currency, dateRange, minAmount, maxAmount },
   };
 }

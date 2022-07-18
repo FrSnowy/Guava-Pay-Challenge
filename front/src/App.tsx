@@ -2,9 +2,21 @@ import * as React from 'react';
 import useModel, { AuthModelT } from '@/root-store';
 import AuthPage from '@/features/Auth';
 import TransactionsPage from '@/features/Transactions';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, RouteObject, Routes, useNavigate } from 'react-router-dom';
+import SingleTransactionPage from './features/SingleTransaction';
+import Logout from './components/Logout';
+import { observer } from 'mobx-react';
 
-const App = () => {
+export const AppRoutesConfig = [
+  { path: '/auth', element: <AuthPage /> },
+  { path: '/transactions', element: <TransactionsPage /> },
+  { path: '/transactions/:id', element: <SingleTransactionPage /> }
+] as const;
+
+const AppRoutes = AppRoutesConfig
+  .map(r => <Route key={r.path} path={r.path} element={r.element} />)
+
+const App = observer(() => {
   const navigate = useNavigate();
   const { authorized } = useModel<AuthModelT>("AuthModel");
 
@@ -13,11 +25,11 @@ const App = () => {
   }, [authorized]);
 
   return (
-    <Routes>
-      <Route path='/auth' element={<AuthPage />} />
-      <Route path='/transactions' element={<TransactionsPage />} />
-    </Routes>
+    <React.Fragment>
+      <Routes>{AppRoutes}</Routes>
+      { authorized && <Logout /> }
+    </React.Fragment>
   );
-};
+});
 
 export default App

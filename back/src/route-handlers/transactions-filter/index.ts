@@ -14,12 +14,12 @@ const registerTransactionFiltersRoute: GenerateRouteFn = s => s.get<{
   const { institutionID } = transactionFilterQueryParser(req.query);
   const { cache } = transactionGenerator;
 
-  if (institutionID === undefined) return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
+  if (!institutionID) return NO_PARAMETER_RESPONSE(reply, ['institutionID']);
 
   const transactions = cache[parseInt(`${institutionID}`, 10)];
 
   if (!transactions?.length) return DATA_OK(reply, {
-    cardID: [],
+    cardIDs: [],
     cardAccount: [],
     currency: [],
   });

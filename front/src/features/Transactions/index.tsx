@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import Page from '@/components/Page';
 import { Header, Loader } from 'semantic-ui-react'
-import Headbar from '@/components/Headbar';
+import * as Headbar from '@/components/Headbar';
 import Sidebar from '@/components/Sidebar';
 import TranscationCard from '@/components/TransactionCard';
 import useModel, { AuthModelT, TransactionsModelT } from '@/root-store';
@@ -51,12 +51,12 @@ const TransactionsPage = observer(() => {
   });
 
   React.useEffect(() => {
-    if (institutionID === undefined) return;
+    if (!institutionID) return;
     getFilterUniqueValues({ institutionID });
   }, [institutionID, getFilterUniqueValues]);
 
   React.useEffect(() => {
-    if (institutionID === undefined) return;
+    if (!institutionID) return;
     getTransactions(institutionID, {
       limit: TRANSACTIONS_PER_PAGE,
       offset: (currentPage - 1) * TRANSACTIONS_PER_PAGE,
@@ -80,8 +80,11 @@ const TransactionsPage = observer(() => {
   }, [transactions]);
 
   return (
-    <Page withSidebar>
-      <Headbar />
+    <Page>
+      <Headbar.Container>
+        <Headbar.Title />
+        <Headbar.MainPageNavigation />
+      </Headbar.Container>
       <Sidebar>
         <Header as='h3' textAlign='center'>
           <Header.Content>Filters</Header.Content>
