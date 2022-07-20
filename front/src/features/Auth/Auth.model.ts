@@ -6,7 +6,7 @@ export const SESSION_ID_NAME = 'institutionID';
 export type AuthModelT = {
   authorized: boolean,
   institutionID?: number,
-  auth: (data: { account: string }) => Promise<any>,
+  auth: (data: { account: string }) => Promise<boolean>,
   logout: () => void,
 };
 
@@ -40,6 +40,7 @@ class AuthModel implements AuthModelT {
     return await this.generateMockData();
   }
 
+  @action('Logout')
   logout = () => {
     sessionStorage.removeItem(SESSION_ID_NAME);
     clearFetchCache();
@@ -49,7 +50,7 @@ class AuthModel implements AuthModelT {
 
   @action('Generate mock data for account')
   private generateMockData = async() => {
-    if (!this.institutionID) return;
+    if (!this.institutionID) return false;
 
     const generateMockData = await fetch<BaseResponseT>('/generate', {
       method: 'POST',
