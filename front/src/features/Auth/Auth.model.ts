@@ -1,4 +1,4 @@
-import fetch, { BaseResponseT } from '@/api';
+import fetch, { BaseResponseT, clearFetchCache } from '@/api';
 import { observable, action, makeObservable } from 'mobx';
 
 export const SESSION_ID_NAME = 'institutionID';
@@ -42,6 +42,7 @@ class AuthModel implements AuthModelT {
 
   logout = () => {
     sessionStorage.removeItem(SESSION_ID_NAME);
+    clearFetchCache();
     this.authorized = false;
     this.institutionID = undefined;
   }

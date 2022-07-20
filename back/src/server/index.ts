@@ -5,7 +5,7 @@ import registerAuthRoute from '../route-handlers/auth';
 import registerTransactionsRoute from '../route-handlers/transactions';
 import registerCardsRoute from '../route-handlers/cards';
 import registerGenerateRoute from '../route-handlers/generate';
-import registerTransactionFiltersRoute from '../route-handlers/transactions-filter';
+import registerFiltersRoute from '../route-handlers/filters';
 import registerAccountsRoute from '../route-handlers/account';
 
 const server = fastify();
@@ -30,8 +30,8 @@ server.register(cors, {
   registerAccountsRoute,
   registerCardsRoute,
   registerTransactionsRoute,
-  registerTransactionFiltersRoute,
   registerGenerateRoute,
+  registerFiltersRoute,
 ].forEach(registerFn => registerFn(server));
 
 export default server;

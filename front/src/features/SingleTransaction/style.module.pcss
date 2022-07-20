@@ -3,7 +3,15 @@
 
   &:not(:last-of-type) {
     padding-bottom: 1em;
-    border-bottom: 1px solid #efefef;
+    border-bottom: 1px solid #cfcfcf;
+
+    & > :global(.column):first-child {
+      border-right: 1px solid #cfcfcf;
+    }
+
+    & > :global(.column):first-child ~ :global(.column) {
+      padding-left: 3em;
+    }
   }
 
   & ~ .container, & ~ :global(.ui.grid).container {
@@ -52,11 +60,11 @@
   border: 1px solid #afafaf;
 
   &.blocked {
-    color: #a00;
-    border-color: #a00;
+    color: var(--status-blocked-color);
+    border-color: var(--status-blocked-color);
   }
   &.active {
-    color: #0a0;
-    border-color: #0a0;
+    color: var(--status-active-color);
+    border-color: var(--status-active-color);
   }
 }

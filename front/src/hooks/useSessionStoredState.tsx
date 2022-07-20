@@ -27,11 +27,12 @@ const useSessionStoredState = <T,>(
     getSavedStorageValue(paramName, institutionID || -1) || initialState
   );
 
-  React.useEffect(() => {
-    saveStorageValue(paramName, institutionID || -1, val);    
-  }, [val, paramName, institutionID]);
+  const setValue: typeof setVal = React.useCallback(v => {
+    setVal(v);
+    saveStorageValue(paramName, institutionID || -1, v);
+  }, [paramName, institutionID]);
 
-  return [val, setVal];
+  return [val, setValue];
 }
 
 export default useSessionStoredState;

@@ -1,7 +1,6 @@
 import React from 'react';
 import style from './style.module.pcss';
 import { Button } from 'semantic-ui-react';
-import { useNavigate } from 'react-router-dom';
 import useModel, { AuthModelT } from '@/root-store';
 import { observer } from 'mobx-react';
 

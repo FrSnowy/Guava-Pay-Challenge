@@ -36,6 +36,8 @@ const useFilter = <T extends FilterValues>({ name, paramName, values }: T) => {
   }, [values, current]);
 
   const view = React.useMemo(() => {
+    if (filterVariantsView.length < 2) return null;
+
     return (
       <Accordion
         name={label ? `${name}: ${label}` : name}
@@ -46,7 +48,7 @@ const useFilter = <T extends FilterValues>({ name, paramName, values }: T) => {
     )
   }, [name, filterVariantsView]);
 
-  return { view, value: current };
+  return { view, value: view ? current : undefined };
 }
 
 export default useFilter;

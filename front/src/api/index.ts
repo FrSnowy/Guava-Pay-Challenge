@@ -10,6 +10,8 @@ export type BaseResponseT = {
 
 const cache = new Map<string, object>();
 
+export const clearFetchCache = () => cache.clear();
+
 const getArgsHash = (url: string, init?: RequestInit): string | false => {
   if (init && init.method !== 'GET') return false;
 

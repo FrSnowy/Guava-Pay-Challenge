@@ -1,0 +1,15 @@
+.blocked {
+  color: var(--status-blocked-color);
+  &:global(.ui.card) {
+    color: initial;
+    box-shadow: 0 1px 3px 0 var(--status-blocked-color), 0 0 0 1px var(--status-blocked-color);
+  }
+}
+.active {
+  color: var(--status-active-color);
+  &:global(.ui.card) {
+    color: initial;
+    box-shadow: 0 1px 3px 0 var(--status-active-color), 0 0 0 1px var(--status-active-color);
+  }
+}
+

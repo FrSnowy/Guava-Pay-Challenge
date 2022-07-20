@@ -2,6 +2,8 @@ import fetch, { BaseResponseT } from '@/api';
 import { CurrencyT } from '@/components/Currency';
 import createQS from '@/utils/createQS';
 import { observable, action, makeObservable } from 'mobx';
+import { Account } from '../Account/Account.model';
+import { Card } from '../Cards/Cards.model';
 
 export type Transaction = {
   transactionID: number,
@@ -11,22 +13,8 @@ export type Transaction = {
   currency: CurrencyT,
   transactionDate: string,
   merchantInfo: string,
-  cardAccountMeta: {
-    id: number,
-    firstName: string,
-    lastName: string,
-    avatar?: string,
-  },
-  //! Move to card type
-  cardMeta: {
-    cardAccount: number,
-    cardID: number,
-    maskedCardNumber: string,
-    expireDate: string,
-    currency: CurrencyT,
-    status: 'active' | 'blocked',
-    balance: number,
-  }
+  cardAccountMeta: Account,
+  cardMeta: Omit<Card, 'cardAccountMeta'>,
 }
 
 type TransactionFilters = {
@@ -44,9 +32,7 @@ export type TransactionsModelT = {
   loading: boolean,
   totalCount: number,
   transactions: Transaction[],
-  filters: TransactionsUniqueFilterValues,
   getTransactions: (institutionID: number, p: TransactionFilters) => Promise<Transaction[]>,
-  getFilterUniqueValues: (p: { institutionID: number }) => Promise<TransactionsUniqueFilterValues>,
 };
 
 export type TransactionsResponse = BaseResponseT & {
@@ -56,21 +42,10 @@ export type TransactionsResponse = BaseResponseT & {
   }
 }
 
-export type TransactionsUniqueFilterValues = {
-  cardIDs: { cardID: number, maskedCardNumber: string }[],
-  cardAccount: { id: number, firstName: string, lastName: string }[],
-  currency: CurrencyT[],
-}
-
-type TransactionsUniqueFilterValuesResponse = BaseResponseT & {
-  data: TransactionsUniqueFilterValues
-}
-
 class TransactionsModel implements TransactionsModelT {
   @observable loading = true;
   @observable transactions: Transaction[] = [];
   @observable totalCount: number = 0;
-  @observable filters: TransactionsUniqueFilterValues = { cardIDs: [], cardAccount: [], currency: [] };
 
   constructor() {
     makeObservable(this);
@@ -86,16 +61,6 @@ class TransactionsModel implements TransactionsModelT {
     this.totalCount = resp.data.totalCount;
     this.loading = false;
     return resp.data.transactions;
-  }
-
-  @action('Get transactions unique filter values')
-  getFilterUniqueValues = async({ institutionID }: { institutionID: number }): Promise<TransactionsUniqueFilterValues> => {  
-    const qs = createQS('/transactions/filters', { institutionID });
-    const resp = await fetch<TransactionsUniqueFilterValuesResponse>(qs);
-    if (resp.statusCode !== 200) return { cardIDs: [], cardAccount: [], currency: [] };
-    this.filters = resp.data;
-    return resp.data;
-
   }
 }
 

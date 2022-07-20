@@ -2,15 +2,19 @@ import * as React from 'react';
 import useModel, { AuthModelT } from '@/root-store';
 import AuthPage from '@/features/Auth';
 import TransactionsPage from '@/features/Transactions';
-import { Route, RouteObject, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import SingleTransactionPage from './features/SingleTransaction';
 import Logout from './components/Logout';
 import { observer } from 'mobx-react';
+import CardsPage from './features/Cards';
+import SingleCardPage from './features/SingleCard';
 
 export const AppRoutesConfig = [
   { path: '/auth', element: <AuthPage /> },
   { path: '/transactions', element: <TransactionsPage /> },
-  { path: '/transactions/:id', element: <SingleTransactionPage /> }
+  { path: '/transactions/:id', element: <SingleTransactionPage /> },
+  { path: '/cards', element: <CardsPage /> },
+  { path: '/cards/:id', element: <SingleCardPage />}
 ] as const;
 
 const AppRoutes = AppRoutesConfig

@@ -7,12 +7,15 @@ import { AppRoutesConfig } from '@/App';
 
 type BreadcrumbsT = {
   transactionName?: string,
+  cardName?: string,
 }
 
 const routeNames: Record<(typeof AppRoutesConfig[number])['path'], (p: BreadcrumbsT) => string> = {
   '/auth': () => 'Authorization',
   '/transactions': () => 'Institution transactions',
   '/transactions/:id': ({ transactionName }) => transactionName || 'Unknown transaction',
+  '/cards': () => 'Institution cards',
+  '/cards/:id': ({ cardName }) => cardName || 'Unknown card',
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsT> = props => {
@@ -36,8 +39,8 @@ export const Breadcrumbs: React.FC<BreadcrumbsT> = props => {
           <React.Fragment key={b.path}>
             {
               b.current
-                ? <span className={styles.link}>{b.name}</span>
-                : <Link to={b.path} className={clsx(styles.link, { [styles.active]: !b?.current })}>{b.name}</Link>
+                ? <span className={clsx(styles.link, styles.active)}>{b.name}</span>
+                : <Link to={b.path} className={clsx(styles.link, { [styles.active]: !!b?.current })}>{b.name}</Link>
             }
             <Breadcrumb.Divider content='>' />
           </React.Fragment>
@@ -55,18 +58,42 @@ export const Title: React.FC<{ title?: string }> = ({ title }) => React.useMemo(
   </div>
 ), [title]);
 
-export const MainPageNavigation: React.FC<{}> = () => (
-  <div className={styles.menu}>
-    <SemanticContainer textAlign='center'>
-      <Link to = '/transactions' className={clsx(styles.link, styles.active)}>
-        Institution transactions
-      </Link>
-      <a className={styles.link}>
-        Institution cards
-      </a>
-    </SemanticContainer>
-  </div>
-);
+export const MainPageNavigation: React.FC<{ onPageChange?: () => void }> = ({ onPageChange }) => {
+  const location = useLocation();
+
+  const onPageChangeHandler = React.useCallback(() => {
+    onPageChange && onPageChange();
+  }, [onPageChange]);
+
+  return React.useMemo(() => (
+    <div className={styles.menu}>
+      <SemanticContainer textAlign='center'>
+        <Link
+          onClick={onPageChangeHandler}
+          to = '/transactions'
+          className={clsx(
+            styles.link,{
+              [styles.active]: matchPath('/transactions', location.pathname)
+            }
+          )}
+        >
+          Institution transactions
+        </Link>
+        <Link
+          onClick={onPageChangeHandler}
+          to ='/cards'
+          className={clsx(
+            styles.link, {
+              [styles.active]: matchPath('/cards', location.pathname)
+            }
+          )}
+        >
+          Institution cards
+        </Link>
+      </SemanticContainer>
+    </div>
+  ), [location]);
+};
 
 export const Container: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className={styles.header}>

@@ -43,7 +43,7 @@ export const getTransactions = (institutionID: number, filters: T.TransactionsFi
     .map(transaction => ({
       ...transaction,
       cardAccountMeta: getAccounts(institutionID, { accountID: transaction.cardAccount })[0],
-      cardMeta: getCards(institutionID, { cardID })[0],
+      cardMeta: getCards(institutionID, { cardID: transaction.cardID }).cards[0],
     }));
 
   return { totalCount: filteredTransactions.length, transactions };
