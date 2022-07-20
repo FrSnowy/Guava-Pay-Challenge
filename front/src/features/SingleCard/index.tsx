@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import style from './style.module.pcss';
 import { observer } from 'mobx-react';
 import Page from '@/components/Page';
-import { Button, Grid, Header, Loader } from 'semantic-ui-react'
+import { Button, Grid, Header } from 'semantic-ui-react'
 import * as Headbar from '@/components/Headbar';
 import useModel, { AuthModelT, SingleCardModelT } from '@/root-store';
 import Currency from '@/components/Currency';
@@ -12,6 +12,7 @@ import isoStringToLocalString from '@/utils/isostring-to-local-string';
 import useSessionStoredState from '@/hooks/useSessionStoredState';
 import { TRANSACTIONS_FILTER_BY_CARD_PARAM } from '@/features/Transactions';
 import { Card } from '@/features/Cards/Cards.model';
+import SingleContentWrapper from '@/components/SingleContentWrapper';
 
 export const CardContent: React.FC<Card> = card => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const CardContent: React.FC<Card> = card => {
   }
 
   return (
-    <div className={clsx(style.container, style.card)}>
+    <div className={style.card}>
       <Header as = 'h2'>Card number {card.maskedCardNumber}</Header>
       <Grid columns={3} className={style.cardContent}>
         <Grid.Column width={5}>
@@ -58,25 +59,15 @@ const SingleCardPage = observer(() => {
     getCard(institutionID, cardID);
   }, [institutionID, cardID]);
 
-  const cardView = React.useMemo(() => {
-    if (loading) return (
-      <Loader active inline />
-    );
-
-    if (!loading && !card) return <span>No data</span>
-
-    return <CardContent {...card!} />
-  }, [loading, card]);
-
   return (
     <Page>
       <Headbar.Container>
         <Headbar.Title />
         <Headbar.Breadcrumbs cardName={card ? `Card ID ${card.cardID}` : undefined} />
       </Headbar.Container>
-      <div>
-        {cardView}
-      </div>
+      <SingleContentWrapper loading={loading} noData={!loading && !card}>
+        { card && <CardContent {...card} /> }
+      </SingleContentWrapper>
     </Page>
   );
 });

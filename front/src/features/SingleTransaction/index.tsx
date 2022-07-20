@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import style from './style.module.pcss';
 import { observer } from 'mobx-react';
 import Page from '@/components/Page';
-import { Button, Grid, Header, Image, Loader } from 'semantic-ui-react'
+import { Button, Grid, Header, Image } from 'semantic-ui-react'
 import * as Headbar from '@/components/Headbar';
 import useModel, { AuthModelT, SingleTransactionModelT } from '@/root-store';
 import Currency from '@/components/Currency';
@@ -12,8 +12,9 @@ import { Transaction } from '@/features/Transactions/Transactions.model';
 import isoStringToLocalString from '@/utils/isostring-to-local-string';
 import useSessionStoredState from '@/hooks/useSessionStoredState';
 import { TRANSACTIONS_FILTER_BY_CARD_PARAM } from '@/features/Transactions';
+import SingleContentWrapper from '@/components/SingleContentWrapper';
 
-const SingleTrasnactionContent: React.FC<Transaction> = transaction => {
+const SingleTransactionContent: React.FC<Transaction> = transaction => {
   const navigate = useNavigate();
   const [_, setTransactionsFilter] = useSessionStoredState<string | undefined>(undefined, TRANSACTIONS_FILTER_BY_CARD_PARAM);
 
@@ -82,25 +83,15 @@ const SingleTransactionPage = observer(() => {
     getTransaction(institutionID, transactionID);
   }, [institutionID, transactionID]);
 
-  const transactionsView = React.useMemo(() => {
-    if (loading) return (
-      <Loader active inline />
-    );
-
-    if (!loading && !transaction) return <span>No data</span>
-
-    return <SingleTrasnactionContent {...transaction!} />
-  }, [loading, transaction]);
-
   return (
     <Page>
       <Headbar.Container>
         <Headbar.Title />
         <Headbar.Breadcrumbs transactionName={transaction ? `Transaction ID ${transaction.transactionID}` : undefined} />
       </Headbar.Container>
-      <div>
-        {transactionsView}
-      </div>
+      <SingleContentWrapper loading={loading} noData={!loading && !transaction}>
+        { transaction && <SingleTransactionContent {...transaction} />}
+      </SingleContentWrapper>
     </Page>
   );
 });

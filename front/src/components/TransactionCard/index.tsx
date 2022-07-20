@@ -6,7 +6,7 @@ import Currency from '../Currency';
 import isoStringToLocalString from '@/utils/isostring-to-local-string';
 import AvatarCard from '../AvatarCard';
 
-const TranscationCard: React.FC<Transaction> = ({ transactionID, amount, currency, transactionDate, cardAccountMeta }) => {
+const TranscationCard: React.FC<Transaction> = ({ transactionID, amount, currency, transactionDate, cardAccountMeta, cardMeta }) => {
   const parsedDate = React.useMemo(() => isoStringToLocalString(transactionDate), [transactionDate]);
 
   return (
@@ -16,7 +16,8 @@ const TranscationCard: React.FC<Transaction> = ({ transactionID, amount, currenc
           {amount}<Currency currency={currency} /> transaction 
         </Link>
       </Card.Header>
-      <div>Transaction&nbsp;date:&nbsp;{parsedDate}</div>
+      <div>Transaction date: {parsedDate}</div>
+      <div>Card number: {cardMeta.maskedCardNumber}</div>
     </AvatarCard>
   );
 };
