@@ -13,9 +13,10 @@ type BreadcrumbsT = {
 const routeNames: Record<(typeof AppRoutesConfig[number])['path'], (p: BreadcrumbsT) => string> = {
   '/auth': () => 'Authorization',
   '/transactions': () => 'Institution transactions',
-  '/transactions/:id': ({ transactionName }) => transactionName || 'Unknown transaction',
+  '/transactions/:transactionID': ({ transactionName }) => transactionName || 'Unknown transaction',
+  '/transactions/:transactionID/:cardID': ({ cardName }) => cardName || 'Unknown card',
   '/cards': () => 'Institution cards',
-  '/cards/:id': ({ cardName }) => cardName || 'Unknown card',
+  '/cards/:cardID': ({ cardName }) => cardName || 'Unknown card',
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsT> = props => {

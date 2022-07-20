@@ -12,9 +12,10 @@ import SingleCardPage from './features/SingleCard';
 export const AppRoutesConfig = [
   { path: '/auth', element: <AuthPage /> },
   { path: '/transactions', element: <TransactionsPage /> },
-  { path: '/transactions/:id', element: <SingleTransactionPage /> },
+  { path: '/transactions/:transactionID', element: <SingleTransactionPage /> },
+  { path: '/transactions/:transactionID/:cardID', element: <SingleCardPage /> },
   { path: '/cards', element: <CardsPage /> },
-  { path: '/cards/:id', element: <SingleCardPage />}
+  { path: '/cards/:cardID', element: <SingleCardPage />}
 ] as const;
 
 const AppRoutes = AppRoutesConfig

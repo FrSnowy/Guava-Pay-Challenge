@@ -26,3 +26,27 @@
     border-color: var(--status-active-color);
   }
 }
+
+.container {
+  & .card {
+    padding-bottom: 2em;
+    border-bottom: 1px solid var(--border-light);
+  }
+}
+
+.meta {
+  margin-top: 3em;
+
+  & :global(.ui.grid) :global(.column) {
+    &:first-child {
+      border-right: 1px solid var(--border-light);
+    }
+    &:last-child {
+      padding-left: 2em;
+
+      & > div {
+        padding: 0.5em 0;
+      }
+    }
+  }
+}
