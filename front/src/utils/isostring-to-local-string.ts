@@ -4,6 +4,6 @@ const isoStringToLocalString = (dateString: string) => {
   const time = new Date(parsed).toLocaleTimeString();
 
   return `${date} ${time}`;
-}
+};
 
 export default isoStringToLocalString;

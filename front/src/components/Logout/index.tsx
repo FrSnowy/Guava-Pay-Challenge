@@ -4,8 +4,8 @@ import { Button } from 'semantic-ui-react';
 import useModel, { AuthModelT } from '@/root-store';
 import { observer } from 'mobx-react';
 
-const Logout: React.FC<{}> = observer(() => {
-  const { logout } = useModel<AuthModelT>("AuthModel");
+const Logout = observer(() => {
+  const { logout } = useModel<AuthModelT>('AuthModel');
 
   return (
     <div className={style.container}>
@@ -13,7 +13,7 @@ const Logout: React.FC<{}> = observer(() => {
         Logout
       </Button>
     </div>
-  )
+  );
 });
 
 export default Logout;

@@ -5,43 +5,43 @@ import { observable, action, makeObservable } from 'mobx';
 import { Account } from '../Account/Account.model';
 
 export type Card = {
-  cardAccount: number,
-  cardID: number,
-  maskedCardNumber: string,
-  expireDate: string,
-  currency: CurrencyT,
-  status: 'active' | 'blocked',
-  balance: number,
-  cardAccountMeta: Account,
-}
+  cardAccount: number;
+  cardID: number;
+  maskedCardNumber: string;
+  expireDate: string;
+  currency: CurrencyT;
+  status: 'active' | 'blocked';
+  balance: number;
+  cardAccountMeta: Account;
+};
 
 type CardFilters = {
-  limit?: number,
-  offset?: number,
-  cardID?: string,
-  accountID?: string,
-  currency?: string,
-  status?: string,
+  limit?: number;
+  offset?: number;
+  cardID?: string;
+  accountID?: string;
+  currency?: string;
+  status?: string;
 };
 
 export type CardsModelT = {
-  loading: boolean,
-  totalCount: number,
-  cards: Card[],
-  getCards: (institutionID: number, p: CardFilters) => Promise<Card[]>,
+  loading: boolean;
+  totalCount: number;
+  cards: Card[];
+  getCards: (institutionID: number, p: CardFilters) => Promise<Card[]>;
 };
 
 export type CardsResponse = BaseResponseT & {
   data: {
-    cards: Card[],
-    totalCount: number,
-  }
-}
+    cards: Card[];
+    totalCount: number;
+  };
+};
 
 class CardsModel implements CardsModelT {
   @observable loading = true;
   @observable cards: Card[] = [];
-  @observable totalCount: number = 0;
+  @observable totalCount = 0;
 
   constructor() {
     makeObservable(this);
@@ -57,7 +57,7 @@ class CardsModel implements CardsModelT {
     this.totalCount = resp.data.totalCount;
     this.loading = false;
     return resp.data.cards;
-  }
+  };
 }
 
 const CardsModelInstance = new CardsModel();

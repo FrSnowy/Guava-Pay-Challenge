@@ -5,12 +5,18 @@ import ResetIcon from '@/components/ResetIcon';
 import { Divider, Input } from 'semantic-ui-react';
 
 type AmountFilterT = {
-  paramName: string,
-}
+  paramName: string;
+};
 
 const useAmountFilter = ({ paramName }: AmountFilterT) => {
-  const [min, setMin] = useSessionStoredState<string | undefined>(undefined, `${paramName}_min`);
-  const [max, setMax] = useSessionStoredState<string | undefined>(undefined, `${paramName}_max`);
+  const [min, setMin] = useSessionStoredState<string | undefined>(
+    undefined,
+    `${paramName}_min`
+  );
+  const [max, setMax] = useSessionStoredState<string | undefined>(
+    undefined,
+    `${paramName}_max`
+  );
 
   const [realMin, setRealMin] = React.useState<string | undefined>(undefined);
   const [realMax, setRealMax] = React.useState<string | undefined>(undefined);
@@ -22,19 +28,19 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
         setRealMax(undefined);
         return;
       }
-  
+
       if (min && !max) {
         setRealMin(min);
         setRealMax(undefined);
         return;
       }
-  
+
       if (max && !min) {
         setRealMin(undefined);
         setRealMax(max);
         return;
       }
-  
+
       if (min && max) {
         const parsedMin = parseFloat(min);
         const parsedMax = parseFloat(max);
@@ -43,7 +49,7 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
           setRealMax(undefined);
           return;
         }
-  
+
         setRealMin(min);
         setRealMax(max);
         return;
@@ -57,7 +63,7 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
     const base = 'By amount';
     let additional = '';
     if (!realMin && !realMax) return base;
-  
+
     if (realMin && !realMax) additional = `more than ${parseFloat(realMin)}`;
     if (realMax && !realMin) additional = `less than ${parseFloat(realMax)}`;
     if (realMin && realMax) {
@@ -67,23 +73,26 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
     return `${base}: ${additional}`;
   }, [realMin, realMax]);
 
-  const inputKeyDownHandler: React.KeyboardEventHandler = e => {
+  const inputKeyDownHandler: React.KeyboardEventHandler = (e) => {
     const canceledSymbols = ['-', ',', '.'];
-    const input = (e.target) as HTMLInputElement;
-    const isCanceledZero = (input.value.length === 0 && e.key === '0');
-    const isCanceledSymbol = canceledSymbols.some(k => e.key === k)
+    const input = e.target as HTMLInputElement;
+    const isCanceledZero = input.value.length === 0 && e.key === '0';
+    const isCanceledSymbol = canceledSymbols.some((k) => e.key === k);
     if (isCanceledSymbol || isCanceledZero) {
       e.preventDefault();
       e.stopPropagation();
       return;
     }
-  }
+  };
 
-  const inputChangeHandler = React.useCallback((t: 'min' | 'max', v: string) => {
-    const realV = v === '' ? undefined : v;
-    if (t === 'min') setMin(realV);
-    if (t === 'max') setMax(realV);
-  }, []);
+  const inputChangeHandler = React.useCallback(
+    (t: 'min' | 'max', v: string) => {
+      const realV = v === '' ? undefined : v;
+      if (t === 'min') setMin(realV);
+      if (t === 'max') setMax(realV);
+    },
+    []
+  );
 
   const resetIcon = React.useMemo(() => {
     if (realMin === undefined && realMax === undefined) return null;
@@ -96,8 +105,8 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
           setRealMax(undefined);
         }}
       />
-    )
-  } , [realMin, realMax]);
+    );
+  }, [realMin, realMax]);
 
   const view = React.useMemo(() => {
     return (
@@ -107,8 +116,8 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
           type='number'
           value={min || ''}
           label='Min. amount'
-          pattern="[0-9]+"
-          onChange={e => inputChangeHandler('min', e.target.value)}
+          pattern='[0-9]+'
+          onChange={(e) => inputChangeHandler('min', e.target.value)}
           onKeyDown={inputKeyDownHandler}
         />
         <Divider />
@@ -117,15 +126,15 @@ const useAmountFilter = ({ paramName }: AmountFilterT) => {
           type='number'
           value={max || ''}
           label='Max. amount'
-          pattern="[0-9]+"
-          onChange={e => inputChangeHandler('max', e.target.value)}
+          pattern='[0-9]+'
+          onChange={(e) => inputChangeHandler('max', e.target.value)}
           onKeyDown={inputKeyDownHandler}
         />
       </Accordion>
-    )
+    );
   }, [name, inputChangeHandler, min, max]);
 
   return { view, min: realMin, max: realMax };
-}
+};
 
 export default useAmountFilter;

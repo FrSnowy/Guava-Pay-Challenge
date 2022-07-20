@@ -2,7 +2,7 @@ import * as React from 'react';
 import style from './style.module.pcss';
 import { observer } from 'mobx-react';
 import Page from '@/components/Page';
-import { Grid, Header } from 'semantic-ui-react'
+import { Grid, Header } from 'semantic-ui-react';
 import * as Headbar from '@/components/Headbar';
 import useModel, { AuthModelT, SingleTransactionModelT } from '@/root-store';
 import Currency from '@/components/Currency';
@@ -13,7 +13,7 @@ import SingleContentWrapper from '@/components/SingleContentWrapper';
 import { CardInformation } from '../SingleCard';
 import { AccountInfo } from '../Account';
 
-const SingleTransactionContent: React.FC<Transaction> = transaction => {
+const SingleTransactionContent: React.FC<Transaction> = (transaction) => {
   return (
     <React.Fragment>
       <div className={style.wrapper}>
@@ -41,15 +41,19 @@ const SingleTransactionContent: React.FC<Transaction> = transaction => {
         />
       </div>
     </React.Fragment>
-  )
+  );
 };
 
 const SingleTransactionPage = observer(() => {
   const { transactionID: qsID } = useParams<{ transactionID: string }>();
-  const { institutionID } = useModel<AuthModelT>("AuthModel");
-  const { loading, getTransaction, transaction } = useModel<SingleTransactionModelT>("SingleTransactionModel");
+  const { institutionID } = useModel<AuthModelT>('AuthModel');
+  const { loading, getTransaction, transaction } =
+    useModel<SingleTransactionModelT>('SingleTransactionModel');
 
-  const transactionID = React.useMemo(() => qsID ? parseInt(qsID, 10) : undefined, [qsID]);
+  const transactionID = React.useMemo(
+    () => (qsID ? parseInt(qsID, 10) : undefined),
+    [qsID]
+  );
 
   React.useEffect(() => {
     if (!institutionID || !transactionID) return;
@@ -60,10 +64,16 @@ const SingleTransactionPage = observer(() => {
     <Page>
       <Headbar.Container>
         <Headbar.Title />
-        <Headbar.Breadcrumbs transactionName={transaction ? `Transaction ID ${transaction.transactionID}` : undefined} />
+        <Headbar.Breadcrumbs
+          transactionName={
+            transaction
+              ? `Transaction ID ${transaction.transactionID}`
+              : undefined
+          }
+        />
       </Headbar.Container>
       <SingleContentWrapper loading={loading} noData={!loading && !transaction}>
-        { transaction && <SingleTransactionContent {...transaction} />}
+        {transaction && <SingleTransactionContent {...transaction} />}
       </SingleContentWrapper>
     </Page>
   );

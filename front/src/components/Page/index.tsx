@@ -7,9 +7,7 @@ export type PageT = {
 
 const Page: React.FC<PageT> = ({ children }) => (
   <div className={styles.container}>
-    <div className={styles.page}>
-      { children }
-    </div>
+    <div className={styles.page}>{children}</div>
   </div>
 );
 

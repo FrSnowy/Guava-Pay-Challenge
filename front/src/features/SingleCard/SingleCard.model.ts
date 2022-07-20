@@ -4,9 +4,9 @@ import { observable, action, makeObservable } from 'mobx';
 import { Card, CardsResponse } from '../Cards/Cards.model';
 
 export type SingleCardModelT = {
-  loading: boolean,
-  card?: Card,
-  getCard: (institutionID: number, cardID: number) => Promise<Card | undefined>,
+  loading: boolean;
+  card?: Card;
+  getCard: (institutionID: number, cardID: number) => Promise<Card | undefined>;
 };
 
 class SingleCardModel implements SingleCardModelT {
@@ -30,7 +30,7 @@ class SingleCardModel implements SingleCardModelT {
     this.card = resp.data.cards[0];
     this.loading = false;
     return resp.data.cards[0];
-  }
+  };
 }
 
 const SingleCardModelInstance = new SingleCardModel();

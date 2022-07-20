@@ -15,15 +15,16 @@ export const AppRoutesConfig = [
   { path: '/transactions/:transactionID', element: <SingleTransactionPage /> },
   { path: '/transactions/:transactionID/:cardID', element: <SingleCardPage /> },
   { path: '/cards', element: <CardsPage /> },
-  { path: '/cards/:cardID', element: <SingleCardPage />}
+  { path: '/cards/:cardID', element: <SingleCardPage /> },
 ] as const;
 
-const AppRoutes = AppRoutesConfig
-  .map(r => <Route key={r.path} path={r.path} element={r.element} />)
+const AppRoutes = AppRoutesConfig.map((r) => (
+  <Route key={r.path} path={r.path} element={r.element} />
+));
 
 const App = observer(() => {
   const navigate = useNavigate();
-  const { authorized } = useModel<AuthModelT>("AuthModel");
+  const { authorized } = useModel<AuthModelT>('AuthModel');
 
   React.useEffect(() => {
     !authorized && navigate('/auth');
@@ -32,9 +33,9 @@ const App = observer(() => {
   return (
     <React.Fragment>
       <Routes>{AppRoutes}</Routes>
-      { authorized && <Logout /> }
+      {authorized && <Logout />}
     </React.Fragment>
   );
 });
 
-export default App
+export default App;
