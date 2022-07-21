@@ -1,4 +1,10 @@
-export const randomIntFromInterval = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);
+export const randomIntFromInterval = (min: number, max: number) => {
+  const realMin = max < min ? max : min;
+  const realMax = min > max ? min : max;
+
+  return Math.floor(Math.random() * (realMax - realMin + 1) + realMin);
+}
+
 export const randomFrom = <T = any>(arr: [T, ...T[]]) => arr[randomIntFromInterval(0, arr.length - 1)] || arr[0];
 export const randomDateTime = () => {
   const year = randomIntFromInterval(2020, 2022);

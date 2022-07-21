@@ -3,8 +3,8 @@ const createCachedGenerator = <T, DataT = {}>(
 ) => {
   const cache: Record<number, T[]> = {};
 
-  const generate = (count: number, forInstitution: number, optData: DataT): T[] => {
-    const list: T[] = cache[forInstitution] || [];
+  const generate = (count: number, forInstitution: number, optData: DataT, force = false): T[] => {
+    const list: T[] = force ? [] : undefined || cache[forInstitution] || [];
     if (list.length > 0 && list.length >= count) return list.slice(0, count);
 
     cache[forInstitution] =  [...list];
