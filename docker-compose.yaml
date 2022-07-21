@@ -20,7 +20,7 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./back:/app
+      - ./back/src:/app/src
     build:
       context: "./back"
       dockerfile: Dockerfile
