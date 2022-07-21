@@ -12,7 +12,7 @@ describe('Cards generator', () => {
       expect(c?.expireDate).toBeDefined();
       expect(c?.maskedCardNumber).toBeDefined();
       expect(c?.status).toBeDefined();
-      expect(cards[i]).toStrictEqual(cardsGenerator.cache[0]?.[i]);
+      expect(c).toStrictEqual(cardsGenerator.cache[0]?.[i]);
     });
   });
 });

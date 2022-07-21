@@ -14,8 +14,8 @@ const generateTransaction = (_: number, i: number, data: GeneratorOptData): T.Tr
   cardID: randomFrom(data.allowedCardIDs as [number, ...number[]]),
   currency: randomFrom([Currency.AZN, Currency.EUR, Currency.USD]),
   transactionDate: randomDateTime(),
-  amount: randomIntFromInterval(0, 1000),
-  merchantInfo: randomFrom(['Aamzon', 'PizzaHut', 'VkusnoITochka', 'Google', 'Youtube', 'Spotify']),
+  amount: randomIntFromInterval(1, 1000),
+  merchantInfo: randomFrom(['Amazon', 'PizzaHut', 'VkusnoITochka', 'Google', 'Youtube', 'Spotify']),
 });
 
 const transactionGenerator = createCachedGenerator<T.Transaction, GeneratorOptData>(generateTransaction);

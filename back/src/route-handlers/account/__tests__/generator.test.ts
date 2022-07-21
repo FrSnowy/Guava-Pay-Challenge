@@ -9,7 +9,7 @@ describe('Account generator', () => {
       expect(acc?.firstName).toBeDefined();
       expect(acc?.lastName).toBeDefined();
       expect(acc?.institutionID).toBe(0);
-      expect(accs[i]).toStrictEqual(accountGenerator.cache[0]?.[i]);
+      expect(acc).toStrictEqual(accountGenerator.cache[0]?.[i]);
     });
   });
 });

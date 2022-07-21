@@ -24,7 +24,7 @@ export type TransactionsQuery = Partial<{
   maxAmount: string,
 }>;
 
-export type TransactionsFilter = {
+export type TransactionsFilter = Partial<{
   limit: number | undefined,
   offset: number | undefined,
   cardID: number | undefined,
@@ -34,7 +34,7 @@ export type TransactionsFilter = {
   dateRange: [string, string] | undefined,
   minAmount: number | undefined,
   maxAmount: number | undefined,
-}
+}>;
 
 export type ParsedTransactionsQuery = {
   institutionID: number | undefined,
