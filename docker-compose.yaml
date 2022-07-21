@@ -1,5 +1,19 @@
 version: "3.9"
 services:
+  front:
+    container_name: guava-front
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front/src:/app/src
+      - ./front/index.html:/app/index.html
+    build:
+      context: "./front"
+      dockerfile: Dockerfile.dev
+    command: npm run dev
+    networks:
+      - internal
   back:
     container_name: guava-test-mock-back
     restart: unless-stopped

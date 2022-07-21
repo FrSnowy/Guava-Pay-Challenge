@@ -1,0 +1,5 @@
+FROM node:16.13.0 as build
+WORKDIR /app
+COPY package.json tsconfig.json tsconfig.node.json vite.config.ts postcss.config.cjs /app/
+RUN npm install
+RUN rm -f .npmrc
