@@ -5,11 +5,28 @@
     &:not(:last-of-type) {
       margin-bottom: 12px;
     }
+
+    @media (max-width: 479px) {
+      width: 100% !important;
+    }
   }
 }
 
 :global(.ui.grid).cardContent {
   margin-top: 1em;
+
+  @media (max-width: 479px) {
+    flex-direction: column !important;
+    & div:global(.wide.column) {
+      width: 100% !important;
+      padding: 0 1rem;
+      text-align: center;
+
+      & :global(.ui.button) {
+        width: 100%;
+      }
+    }
+  }
 }
 
 .status {
@@ -37,16 +54,27 @@
 .meta {
   margin-top: 3em;
 
-  & :global(.ui.grid) :global(.column) {
-    &:first-child {
-      border-right: 1px solid var(--border-light);
-    }
-    &:last-child {
-      padding-left: 2em;
-
-      & > div {
-        padding: 0.5em 0;
+  & :global(.ui.grid) {
+    & :global(.column) {
+      &:first-child {
+        border-right: 1px solid var(--border-light);
       }
+      &:last-child {
+        padding-left: 2em;
+  
+        & > div {
+          padding: 0.5em 0;
+        }
+      }
+      @media (max-width: 479px) {
+        &:global(.nine.wide), &:global(.seven.wide) {
+          width: 100% !important;
+          border-right: 0;
+        }
+      }
+    }
+    @media (max-width: 479px) {
+      flex-direction: column;
     }
   }
 }

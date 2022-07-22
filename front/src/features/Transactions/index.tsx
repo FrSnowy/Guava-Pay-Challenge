@@ -124,7 +124,7 @@ const TransactionsPage = observer(() => {
   }, [transactions]);
 
   return (
-    <Page>
+    <Page withSidebar>
       <Headbar.Container>
         <Headbar.Title />
         <Headbar.MainPageNavigation onPageChange={() => setCurrentPage(1)} />

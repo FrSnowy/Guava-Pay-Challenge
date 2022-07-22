@@ -9,6 +9,15 @@
       & ~ :global(.column) {
         padding-left: 3em;
       }
+
+      @media (max-width: 479px) {
+        width: 100% !important;
+        text-align: center;
+      }
+    }
+  
+    @media (max-width: 479px) {
+      flex-direction: column;   
     }
   }
 }

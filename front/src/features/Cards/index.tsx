@@ -97,7 +97,7 @@ const CardsPage = observer(() => {
   }, [cards]);
 
   return (
-    <Page>
+    <Page withSidebar>
       <Headbar.Container>
         <Headbar.Title />
         <Headbar.MainPageNavigation onPageChange={() => setCurrentPage(1)} />
